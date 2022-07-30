@@ -18,6 +18,5 @@
              
             
                    
-        
-  ![alt text](https://github.com/prax78/PowerShellServer/blob/master/psservernew.gif)
+![alt text](https://github.com/prax78/PowerShellServer/blob/master/psservernew.gif)
 ![alt text](https://github.com/prax78/PowerShellServer/blob/master/psserver1.PNG)
