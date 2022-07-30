@@ -9,6 +9,12 @@
        
            
            ** How to run it!!
+           1 Download PowerShellServer.zip from the Download.
+           2 Extract contents of the ZIP.
+           3 Simply run ps1.exe , this will open connections using your server ip, for example if it is 10.10.10.10, then it will open 
+             connection like http://10.10.10.10:5005 [If you want to change, clone the repository and edit as per your needs :) ].
+             
+             
             
                    
         
