@@ -9,6 +9,7 @@
        
            
            ** How to run it!!
+           ** Please download ASP.NET runtime first https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-aspnetcore-6.0.7-windows-x86-installer [Reboot not required]
            1 Download PowerShellServer.zip from the Download.
            2 Extract contents of the ZIP.
            3 Simply run ps1.exe , this will open connections using your server ip, for example if it is 10.10.10.10, then it will open 
