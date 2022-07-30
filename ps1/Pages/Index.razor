@@ -1,0 +1,81 @@
+﻿@page "/"
+@using System.Diagnostics
+@using System.IO
+<PageTitle>Index</PageTitle>
+
+<h1><img src="img/ps.jpg" />PowerShell Server</h1>
+
+
+<textarea @bind="@input" cols="120" rows="5"></textarea>
+<p></p>
+<button class="btn btn-primary" @onclick="data" style="width:500px">Go PS!!</button>
+<p></p>
+
+<p></p>
+<div class="alert-info" style="background-color:#012456">
+<p role="status">
+   <ol start="1" >
+
+        @foreach (var item in msg)
+        {
+            if(!String.IsNullOrEmpty(item)){
+                if(item.Contains("error",StringComparison.CurrentCultureIgnoreCase))
+                {
+                        <li><text style="color:red">@item </text></li>
+                }
+                else
+                {
+                            <li><text style="color:white;font-family:Consolas">@item</text></li>
+                }
+                
+            }
+        }
+       
+   </ol>
+</p>
+</div>
+@code{
+    private List<string> msg = new List<string>();
+    private bool btnstatus = false;
+    private string pname;
+    private int pid = -1;
+    private string input;
+    private void  data()
+    {
+        msg.Clear();
+        if (!String.IsNullOrEmpty(input))
+        {
+            Process p = new Process();
+            ProcessStartInfo si = new ProcessStartInfo(@"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe", input);
+            p.StartInfo = si;
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.Start();
+            pid = p.Id;
+            pname = p.ProcessName;
+
+     
+
+            while (!p.StandardOutput.EndOfStream)
+            {
+
+               msg.Add(p.StandardOutput.ReadLine());
+
+
+            }
+
+            p.Close();
+            //pid = 99999;
+            //btnstatus = false;
+
+        }
+
+        // p.Close();
+        //  msg = input;
+
+    }
+
+  
+  
+
+}

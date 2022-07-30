@@ -1,0 +1,95 @@
+﻿@page "/killpsprocess"
+
+@using System.Diagnostics
+@using System.Management
+<h3>Kill PowerShell Processes that are long running</h3>
+
+<div >
+    <table class="table table-striped">
+        <thead title="Kill Long Running PowerShell Processes" class="table-bordered">
+            <tr class="table table-dark">
+                <th scope="col">PID </th>
+                <th scope="col">Process Name</th>
+                <th scope="col">User Name</th>
+                <th scope="col"></th>
+                
+            </tr>
+        </thead>
+        <tbody >
+           
+                @foreach(ProcessDetails item in pslist)
+                {
+                   
+
+                    <tr style="color:white;background-color:darkblue">
+                        <td>@item.pID</td>
+                        <td>@item.pName</td>
+                        <td>@item.username</td>
+                        <td><button class="btn-danger" @onclick="()=>{KillPS(item.pID);pslist.Remove(item);}"> Kill</button></td>
+
+                    </tr>
+
+                   
+                
+                }
+             
+           
+        </tbody>
+    </table>
+</div>
+@code {
+    private List<ProcessDetails> pslist = new List<ProcessDetails>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        pslist.Clear();
+        Process[] ps = Process.GetProcesses();
+
+        foreach (Process p in ps)
+        {
+            if(p.ProcessName=="powershell")
+            {
+                pslist.Add(new ProcessDetails { pID = p.Id, pName = p.ProcessName, username = GetUser(p.Id) });
+
+            }
+        }
+        await Task.Delay(0);
+    }
+    private void KillPS(int pid)
+    {
+
+
+        if(!Process.GetProcessById(pid).HasExited)
+        {
+            Process.GetProcessById(pid).Kill();
+        }
+
+
+    }
+
+
+    private string GetUser(int pid)
+    {
+        string[] arglist = new string[] { string.Empty, string.Empty };
+        ManagementScope qfeScope = new ManagementScope("\\\\.\\root\\CIMV2");
+        ObjectQuery query = new ObjectQuery($"Select *  from Win32_Process Where ProcessId='{pid}'");
+        ManagementObjectSearcher qfeSearcher = new ManagementObjectSearcher(qfeScope, query);
+        foreach (ManagementObject ob in qfeSearcher.Get())
+        {
+           
+            var op = ob.InvokeMethod("GetOwner", arglist);
+            return $"{arglist[1]}\\{arglist[0]}";
+        }
+        return "";
+    }
+    public class ProcessDetails
+    {
+        public int pID { get; set; }
+        public string pName { get; set; }
+        public string username { get; set; }
+
+   }
+
+}
